@@ -29,7 +29,7 @@ export default class ImageSlider extends Component {
     currentIndex: 0
   };
   componentDidMount() {
-    const data = this.props.navigation.getParam('data');
+    const data = this.props.navigation.getParam('images');
     const currentIndex = this.props.navigation.getParam('index');
 
     this.setState({
@@ -140,17 +140,22 @@ export default class ImageSlider extends Component {
                   <Text style={{ fontWeight: "bold", fontSize: 16 }}>
                     Photographer
                   </Text>
-                  <Text style={{ fontStyle: "italic", fontSize: 14 }}>
+                  <Text
+                    style={{
+                      fontStyle: 'italic',
+                      fontSize: 14,
+                      textTransform: 'capitalize',
+                    }}
+                  >
                     {currentData.photographer}
                   </Text>
                 </Col>
-                <Col>
+                <Col style={{ marginLeft: 5, marginRight: 5 }}>
                   <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                    Location
+                    Place Name
                   </Text>
                   <Text style={{ fontStyle: "italic", fontSize: 14 }}>
-                    Lat: {" " + currentData.latitude},
-                    {` Long:${currentData.longitude}`}
+                    {currentData.placeName}
                   </Text>
                 </Col>
                 <Col>

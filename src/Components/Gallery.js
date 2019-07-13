@@ -3,52 +3,81 @@ import { Button, Text, View, Content, Thumbnail, Spinner } from 'native-base';
 import { Image, ScrollView, TouchableOpacity } from 'react-native';
 import { FlatGrid } from 'react-native-super-grid';
 import { StyleSheet } from "react-native";
-import data from "./data.json";
+import fakeData from "./data.json";
 import RadioForm from 'react-native-simple-radio-button';
+
+const baseUrl = 'http://192.168.56.1';
 
 export default class Gallery extends Component {
   state = {
-    images: false
+    images: []
   };
 
-  _sortData = (byLikes, images) => {
+  _sortData = (byLikes, d) => {
     if (byLikes) {
-      images.sort((a, b) => {
+      d.sort((a, b) => {
         return b.likes - a.likes;
       });
     } else {
-      images.sort((a, b) => {
+      d.sort((a, b) => {
         let dateA = new Date(a.createdAt),
           dateB = new Date(b.createdAt);
         return dateB - dateA;
       });
     }
-    return data;
+    return d;
+  };
+
+  _fetchData = () => {
+    return fetch(`${baseUrl}/myphpcode/gallary.php`);
   };
 
   componentDidMount() {
-    let sortedData = this._sortData(0, data); // by defualt data should be order by date
-    this.setState({
-      images: sortedData
-    });
+    // let sortedData = this._sortData(0, fakeData); // by defualt data should be order by date
+    // this.setState({
+    //   images: sortedData
+    // });
+    this._fetchData()
+      .then(data => data.json())
+      .then(d => {
+        const transformedData = d.map(item => ({
+          id: item.id,
+          placeName: item.place_name,
+          location: item.location,
+          description: item.description,
+          url: `${baseUrl}/${item.image}`, //image should be converted base64 format or blob
+          // url: 'https://picsum.photos/400/400?' + parseInt(Math.random() * 500),
+          photographer: item.photographer_name,
+          // likes: parseInt(item.likes),
+          likes: parseInt(Math.random() * 1000),
+          createdAt: item.date
+        }));
+
+        let sortedData = this._sortData(0, transformedData); // by defualt data should be order by date
+
+        this.setState({
+          images: sortedData
+        });
+        // console.log(this.state.images);
+      })
+      .catch(e => console.log(e.message));
   }
 
   _handleRadioClick = value => {
     const sortedData = this._sortData(value, this.state.images);
     this.setState({
-      images: sortedData
+      images: sortedData,
     });
   };
 
-  _renderThumbnail = props => {
-    const { item, index } = props;
+  _renderThumbnail = ({ item, index }) => {
     const { navigation } = this.props;
 
     return (
       <CustomThumbnail
         navigation={navigation}
         image={item}
-        data={this.state.images}
+        images={this.state.images}
         index={index}
       />
     );
@@ -91,10 +120,10 @@ export default class Gallery extends Component {
   }
 }
 
-const CustomThumbnail = ({ image, index, navigation, Data }) => {
+const CustomThumbnail = ({ image, index, navigation, images }) => {
   const handlePress = () => {
     navigation.navigate("ImageSlider", {
-      data,
+      images,
       index
     });
   };
