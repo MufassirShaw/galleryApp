@@ -1,16 +1,16 @@
-import React, { Component, Fragment } from 'react';
-import { Button, Text, View, Content, Thumbnail, Spinner } from 'native-base';
-import { Image, ScrollView, TouchableOpacity } from 'react-native';
-import { FlatGrid } from 'react-native-super-grid';
-import { StyleSheet } from "react-native";
-import fakeData from "./data.json";
-import RadioForm from 'react-native-simple-radio-button';
+import React, { Component, Fragment } from "react";
+import { Button, Text, View, Content, Thumbnail, Spinner } from "native-base";
+import { Image, ScrollView, TouchableOpacity } from "react-native";
+import { FlatGrid } from "react-native-super-grid";
+import { StyleSheet } from 'react-native';
+import fakeData from './data.json';
+import RadioForm from "react-native-simple-radio-button";
 
-const baseUrl = 'http://192.168.56.1';
+const baseUrl = "http://192.168.56.1";
 
 export default class Gallery extends Component {
   state = {
-    images: []
+    images: [],
   };
 
   _sortData = (byLikes, d) => {
@@ -46,17 +46,17 @@ export default class Gallery extends Component {
           location: item.location,
           description: item.description,
           url: `${baseUrl}/${item.image}`, //image should be converted base64 format or blob
-          // url: 'https://picsum.photos/400/400?' + parseInt(Math.random() * 500),
+          // url: 'https://picsum.photos/400/400?' + parseInt(Math.random() * 500), //fake images
           photographer: item.photographer_name,
-          // likes: parseInt(item.likes),
-          likes: parseInt(Math.random() * 1000),
-          createdAt: item.date
+          likes: parseInt(item.likes),
+          // likes: parseInt(Math.random() * 1000), // fake likes
+          createdAt: item.date,
         }));
 
         let sortedData = this._sortData(0, transformedData); // by defualt data should be order by date
 
         this.setState({
-          images: sortedData
+          images: sortedData,
         });
         // console.log(this.state.images);
       })
@@ -66,7 +66,7 @@ export default class Gallery extends Component {
   _handleRadioClick = value => {
     const sortedData = this._sortData(value, this.state.images);
     this.setState({
-      images: sortedData,
+      images: sortedData
     });
   };
 
@@ -96,8 +96,8 @@ export default class Gallery extends Component {
         <View style={styles.btnContainer}>
           <RadioForm
             radio_props={[
-              { label: "Most Recent", value: 0 },
-              { label: "Most Popular", value: 1 }
+              { label: 'Most Recent', value: 0 },
+              { label: 'Most Popular', value: 1 },
             ]}
             style={styles.RadioForm}
             initial={0}
@@ -105,8 +105,8 @@ export default class Gallery extends Component {
             formHorizontal={true}
             animation={true}
             labelHorizontal={true}
-            buttonColor={'#04293F'}
-            selectedButtonColor={'#04293F'}
+            buttonColor={"#04293F"}
+            selectedButtonColor={"#04293F"}
           />
         </View>
         <FlatGrid
@@ -122,9 +122,9 @@ export default class Gallery extends Component {
 
 const CustomThumbnail = ({ image, index, navigation, images }) => {
   const handlePress = () => {
-    navigation.navigate("ImageSlider", {
+    navigation.navigate('ImageSlider', {
       images,
-      index
+      index,
     });
   };
   return (
@@ -137,25 +137,25 @@ const CustomThumbnail = ({ image, index, navigation, images }) => {
 const styles = StyleSheet.create({
   btnContainer: {
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-around",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     marginTop: 5,
-    marginBottom: 5,
+    marginBottom: 5
   },
   item: {
-    flex: 1
+    flex: 1,
   },
   center: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
   },
   RadioForm: {
     flex: 1,
-    justifyContent: "space-evenly",
-    backgroundColor: "#fff",
+    justifyContent: 'space-evenly',
+    backgroundColor: '#fff',
     paddingTop: 6,
-    paddingBottom: 6
-  }
+    paddingBottom: 6,
+  },
 });
